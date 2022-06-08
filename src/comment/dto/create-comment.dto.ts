@@ -3,39 +3,32 @@ import {
   IsInt,
   IsNotEmpty,
   IsString,
-  MaxLength,
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from "@nestjs/swagger";
 
-export class CreatePostDto {
-  @ApiProperty({ example: { title: 'Title' } })
+export class CreateCommentDto {
+
+  @ApiProperty({ example: { text: 'Some text' } })
   @IsString()
   @MinLength(2, {
-    message: 'Title is too short',
-  })
-  @MaxLength(30, {
-    message: 'Title is too long',
+    message: 'Text is too short',
   })
   @IsNotEmpty({
     message: 'This field is required',
   })
+  public text: string;
 
-  public title: string;
-
-  @ApiProperty({ example: { content: 'Some text' } })
-  @IsString()
-  @MinLength(2, {
-    message: 'Content is too short',
-  })
-  @IsNotEmpty({
-    message: 'This field is required',
-  })
-
-  public content: string;
-
+  @ApiProperty({ example: { published: false } })
   // @IsBoolean() //якщо прописую цю валідацію, то не можу оновити тільки text? краще тоді не валідувати це поле?
   public published?: boolean | null;
+
+  @ApiProperty({ example: { authorId: 5 } })
   @IsInt()
+
   public authorId?: number;
+
+  @ApiProperty({ example: { postId: 11 } })
+  @IsInt()
+  public postId?: number;
 }
