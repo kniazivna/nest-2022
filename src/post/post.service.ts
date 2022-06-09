@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Post } from '@prisma/client';
+import { Prisma, Post, User } from "@prisma/client";
 
 import { PrismaService } from '../core/prisma.service';
 
@@ -39,9 +39,7 @@ export class PostService {
     });
   }
 
-  deletePost(postData: Prisma.PostWhereInput, postId: string): Promise<Post> {
-    return this.prismaService.post.delete({
-      where: { id: Number(postId) },
-    });
+  deletePost(postId: string): Promise<Post> {
+    return this.prismaService.post.delete({ where: { id: Number(postId) } });
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Comment, Prisma } from '@prisma/client';
+import { Comment, Prisma, User } from "@prisma/client";
 
 import { PrismaService } from '../core/prisma.service';
 
@@ -34,10 +34,7 @@ export class CommentService {
     });
   }
 
-  deleteComment(
-    commentData: Prisma.CommentWhereInput,
-    commentId: string,
-  ): Promise<Comment> {
+  deleteComment(commentId: string): Promise<Comment> {
     return this.prismaService.comment.delete({
       where: { id: Number(commentId) },
     });

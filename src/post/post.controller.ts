@@ -150,9 +150,7 @@ export class PostController {
     },
   })
   @Delete('/:id')
-  deleteUser(postDto: CreatePostDto, @Param('id') id: string) {
-    return this.postService.deletePost(postDto, id);
-    //не розумію, що не так з postDto?підсвічує його, типу не відповідає моделі
-    //змінила  в сервісі UserWhereUniqueInput на PostWhereInput і все норм, але нз чи то правильно
+  deletePost(@Param('id') id: string) {
+    return this.postService.deletePost(id);
   }
 }

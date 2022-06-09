@@ -113,7 +113,7 @@ export class CommentController {
     },
   })
   @Delete('/:id')
-  deleteComment(commentDto: CreateCommentDto, @Param('id') id: string) {
-    return this.commentService.deleteComment(commentDto, id);
+  deleteComment(@Param('id') id: string) {
+    return this.commentService.deleteComment(id);
   }
 }
