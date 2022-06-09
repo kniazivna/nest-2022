@@ -213,7 +213,7 @@ export class UserController {
     },
   })
   @Delete(':id')
-  deleteUser(userDto: CreateUserDto, @Param('id') id: string) {
-    return this.userService.deleteUser(userDto, id);
+  deleteUser(@Param('id') id: string) {
+    return this.userService.deleteUser(id);
   }
 }

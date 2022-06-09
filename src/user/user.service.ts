@@ -49,12 +49,7 @@ export class UserService {
     });
   }
 
-  deleteUser(
-    userData: Prisma.UserWhereUniqueInput,
-    userId: string,
-  ): Promise<User> {
-    return this.prismaService.user.delete({
-      where: { id: Number(userId) },
-    });
+  deleteUser(userId: string): Promise<User> {
+    return this.prismaService.user.delete({ where: { id: Number(userId) } });
   }
 }
