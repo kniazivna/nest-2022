@@ -12,7 +12,7 @@ import { PrismaService } from '../core/prisma.service';
   imports: [
     forwardRef(() => UserModule),
     JwtModule.register({
-      secret: process.env.PRIVATE_KEY || 'Secret',
+      secret: 'Secret',
       signOptions: {
         expiresIn: '48h',
       },
