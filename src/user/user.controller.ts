@@ -8,11 +8,13 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/jwt-auth.guard';
 
 //endpoint ('users')
 @ApiTags('users')
@@ -37,7 +39,8 @@ export class UserController {
     },
   })
   @HttpCode(HttpStatus.OK)
-  @Get()
+  @Get('/')
+  @UseGuards(AuthGuard)
   getAll() {
     return this.userService.getAll();
   }
@@ -84,6 +87,22 @@ export class UserController {
       },
     },
   })
+  @ApiOperation({ summary: 'get one user by email' })
+  @ApiOkResponse({
+    status: 200,
+    schema: {
+      example: {
+        id: 2,
+        email: 'petro@gmail.com',
+        name: 'user',
+        city: 'Kyiv',
+        age: 30,
+        password: '123456',
+        status: true,
+      },
+    },
+  })
+
   //то як робити запити з постами і коментами, то так як нижче потрібно endpoints прописувати, чи я не правильно зрозуміла?
   @Get(':id/posts')
   getByIdAndPosts(@Param('id') id: string) {
@@ -171,6 +190,8 @@ export class UserController {
       },
     },
   })
+
+  //create user правильно робити при реєстрації на auth
   @HttpCode(HttpStatus.CREATED)
   @Post()
   createUser(@Body() userDto: CreateUserDto) {
