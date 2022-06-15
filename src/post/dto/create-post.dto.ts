@@ -1,12 +1,13 @@
 import {
   IsBoolean,
   IsInt,
-  IsNotEmpty,
+  IsNotEmpty, IsNumber,
   IsString,
   MaxLength,
-  MinLength,
-} from 'class-validator';
+  MinLength
+} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { Optional } from "@nestjs/common";
 
 export class CreatePostDto {
   @ApiProperty({ example: { title: 'Title' } })
@@ -33,6 +34,11 @@ export class CreatePostDto {
   })
 
   public content: string;
+
+  @ApiProperty({ example: { likes: 10 } })
+  @IsNumber()
+  @Optional()
+  public likes: number;
 
   // @IsBoolean() //якщо прописую цю валідацію, то не можу оновити тільки text? краще тоді не валідувати це поле?
   public published?: boolean | null;

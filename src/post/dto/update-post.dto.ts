@@ -1,5 +1,6 @@
-import { IsBoolean, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsBoolean, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
+import { Optional } from "@nestjs/common";
 
 export class UpdatePostDto {
   @ApiProperty({ example: { title: 'Title' } })
@@ -18,6 +19,11 @@ export class UpdatePostDto {
     message: 'Content is too short',
   })
   public content: string;
+
+  @ApiProperty({ example: { likes: 10 } })
+  @IsNumber()
+  @Optional()
+  public likes: number;
   // @IsBoolean() //якщо прописую цю валідацію, то не можу оновити тільки text? краще тоді не валідувати це поле?
   public published?: boolean;
 }
