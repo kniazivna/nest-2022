@@ -92,6 +92,7 @@ export class PostController {
       example: {
         title: 'Title',
         content: 'Some text',
+        likes: 2,
         published: true,
         authorId: 2,
       },
@@ -111,6 +112,7 @@ export class PostController {
         id: 4,
         title: 'UpdatedTitle',
         content: 'UpdatedTextContent',
+        likes: 3,
         published: true,
         authorId: 3,
       },

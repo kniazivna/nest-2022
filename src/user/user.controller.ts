@@ -7,14 +7,20 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Post,
+  Post, Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
+import { diskStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/jwt-auth.guard';
+import { imageFileFilter } from '../utils/image.filter';
 
 //endpoint ('users')
 @ApiTags('users')
@@ -59,11 +65,39 @@ export class UserController {
       },
     },
   })
-  @Get(':id')
+  @Get('/:id')
   getById(@Param('id') id: string) {
     return this.userService.getById(id);
   }
   @ApiOperation({ summary: 'get one user by id with posts' })
+  @ApiOkResponse({
+    status: 200,
+    schema: {
+      example: {
+        id: 1,
+        email: 'olena@gmail.com',
+        name: 'Olena',
+        city: 'Lviv',
+        age: 34,
+        password: '123456',
+        status: true,
+        posts: [
+          {
+            id: 3,
+            title: 'Title',
+            content: 'Some text',
+            published: true,
+            authorId: 1,
+          },
+        ],
+      },
+    },
+  })
+  @Get('/:email')
+  getByEmail(@Param('email') email: string) {
+    return this.userService.getByEmail(email);
+  }
+  @ApiOperation({ summary: 'get one user by email with posts' })
   @ApiOkResponse({
     status: 200,
     schema: {
@@ -214,8 +248,48 @@ export class UserController {
     },
   })
   @Patch(':id')
-  updateUser(@Body() userData: UpdateUserDto, @Param('id') id: string) {
-    return this.userService.updateUser(userData, id);
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: './avatar',
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+
+          return cb(null, `${randomName}${file.originalname}`);
+        },
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
+  updateUser(
+    @Body() userData: UpdateUserDto,
+    @Param('id') id: string,
+    @UploadedFile() avatar: Express.Multer.File,
+  ) {
+    let newAvatarPath: string = null;
+    try {
+      if (avatar) {
+        const randomName = Array(32)
+          .fill(null)
+          .map(() => Math.round(Math.random() * 16).toString(16))
+          .join('');
+
+        newAvatarPath = `avatar/${randomName}${avatar.originalname}`;
+      }
+
+      userData.avatar = newAvatarPath;
+      return this.userService.updateUser(userData, id);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  @Get('avatar/:image')
+  watchFile(@Param('image') image, @Res() res) {
+    return res.sendFile(image, { root: './avatar' });
   }
 
   @ApiOperation({ summary: 'delete user' })
@@ -238,3 +312,10 @@ export class UserController {
     return this.userService.deleteUser(id);
   }
 }
+
+//Рандомна назва картинки
+
+//// const randomName = Array(32)
+// //   .fill(null)
+// //   .map(() => Math.round(Math.random() * 16).toString(16))
+// //   .join('');

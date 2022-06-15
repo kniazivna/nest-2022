@@ -13,6 +13,7 @@ model User {
   name     String
   city     String?
   age      Int
+  avatar   String?
   password String
   status   Boolean
   posts    Post[]

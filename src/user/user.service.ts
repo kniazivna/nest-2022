@@ -18,7 +18,7 @@ export class UserService {
   }
 
   getByEmail(userEmail: string): Promise<User> {
-    return this.prismaService.user.findFirst({
+    return this.prismaService.user.findUnique({
       where: { email: userEmail },
     });
   }
@@ -49,9 +49,14 @@ export class UserService {
   }
 
   updateUser(userData: Prisma.UserUpdateInput, userId: string): Promise<User> {
+    //console.log(userData); - перевірили чи приходять дані
     return this.prismaService.user.update({
       where: { id: Number(userId) },
-      data: { name: userData.name, city: userData.city }, // а можна просто прописати data:userData, якщо ми не знаємо, які дані будуть оновлювати, си тоді потрібно кожне поле прописувати???
+      data: {
+        name: userData.name,
+        city: userData.city,
+        avatar: userData.avatar,
+      }, // а можна просто прописати data:userData, якщо ми не знаємо, які дані будуть оновлювати, си тоді потрібно кожне поле прописувати???
     });
   }
 

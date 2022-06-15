@@ -3,11 +3,11 @@ import {
   IsBoolean,
   IsEmail,
   IsNotEmpty,
-  IsNumber,
+  IsNumber, IsOptional,
   IsString,
   MaxLength,
-  MinLength,
-} from 'class-validator';
+  MinLength
+} from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -40,6 +40,10 @@ export class CreateUserDto {
     message: 'This field is required',
   })
   public age: number;
+
+  @IsString()
+  @IsOptional()
+  public avatar: string;
 
   @ApiProperty({ example: { city: 'Lviv' } })
   @IsString()
